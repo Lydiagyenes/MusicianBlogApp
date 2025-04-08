@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Javított alap téma -->
+    <style name="Theme.MusicianBlogApp" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Fő márkaszínek -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryVariant">@color/colorPrimaryVariant</item>
+        <item name="colorOnPrimary">@color/colorOnPrimary</item>
+
+        <!-- Másodlagos/Kiemelő színek -->
+        <item name="colorSecondary">@color/colorSecondary</item>
+        <item name="colorSecondaryVariant">@color/colorSecondaryVariant</item>
+        <item name="colorOnSecondary">@color/colorOnSecondary</item>
+
+        <!-- Háttér és Felület színek -->
+        <item name="android:colorBackground">@color/beige_background</item> <!-- Helyes névvel -->
+        <item name="colorSurface">@color/red_300_surface</item> <!-- Helyes névvel -->
+        <item name="colorOnBackground">@color/colorOnBackground</item>
+        <item name="colorOnSurface">@color/colorOnSurface</item>
+
+        <!-- Hiba szín -->
+        <item name="colorError">@color/colorError</item>
+        <item name="colorOnError">@color/colorOnError</item>
+
+        <!-- Status Bar színe -->
+        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+
+        <!-- Alapértelmezett szövegszínek -->
+        <item name="android:textColorPrimary">@color/textColorPrimary</item>
+        <item name="android:textColorSecondary">@color/textColorSecondary</item>
+
+        <!-- Alapértelmezett ikon színezés -->
+        <item name="colorControlNormal">@color/colorControlNormalColor</item>
+        <item name="colorControlActivated">?attr/colorSecondary</item>
+        <item name="colorControlHighlight">@color/colorControlHighlightColor</item>
+    </style>
+
+    <style name="Theme.MusicianBlogApp.NoActionBar" parent="Theme.MusicianBlogApp">
+        <!-- Ez most redundáns lehet, ha az alap téma már NoActionBar, de nem árt -->
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.MusicianBlogApp.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="Theme.MusicianBlogApp.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+</resources>

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".EditProfileActivity">
+
+    <!-- Toolbar -->
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbarEditProfile"
+        android:layout_width="0dp"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- Profilkép és szerkesztés gomb FrameLayout-ban -->
+    <FrameLayout
+        android:id="@+id/frameLayoutProfileImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        app:layout_constraintTop_toBottomOf="@id/toolbarEditProfile"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/imageViewEditProfile"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:src="@drawable/ic_person"
+            app:civ_border_color="#CCCCCC"
+            app:civ_border_width="2dp"
+            tools:src="@tools:sample/avatars" />
+
+        <ImageButton
+            android:id="@+id/buttonEditImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_edit_white"
+            android:background="@drawable/circle_background_primary"
+            android:padding="8dp"
+            android:elevation="4dp"
+            android:layout_gravity="bottom|end"
+            android:contentDescription="@string/edit_profile_picture_button" />
+
+    </FrameLayout>
+
+    <!-- Név szerkesztése -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayoutDisplayName"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginTop="24dp"
+        app:layout_constraintTop_toBottomOf="@id/frameLayoutProfileImage"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/editTextEditDisplayName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/hint_display_name"
+            android:inputType="textPersonName|textCapWords"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Mentés gomb -->
+    <Button
+        android:id="@+id/buttonSaveChanges"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/button_save_changes"
+        android:layout_marginTop="32dp"
+        app:layout_constraintTop_toBottomOf="@id/textInputLayoutDisplayName"
+        app:layout_constraintStart_toStartOf="@id/textInputLayoutDisplayName"
+        app:layout_constraintEnd_toEndOf="@id/textInputLayoutDisplayName"/>
+
+    <!-- Töltésjelző -->
+    <ProgressBar
+        android:id="@+id/progressBarEditProfile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:visibility="visible"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

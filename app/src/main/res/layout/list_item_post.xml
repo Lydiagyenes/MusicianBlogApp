@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="8dp"
+    android:layout_marginVertical="4dp"
+    android:backgroundTint="?attr/colorSurface"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="4dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="12dp">
+
+        <!-- Szerzői infók -->
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/imageViewAuthorPhoto"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_person"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/textViewAuthorName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:textStyle="bold"
+            android:textColor="@android:color/black"
+            app:layout_constraintEnd_toStartOf="@id/buttonMenuOptions"
+        app:layout_constraintStart_toEndOf="@id/imageViewAuthorPhoto"
+        app:layout_constraintTop_toTopOf="@id/imageViewAuthorPhoto"
+        tools:text="Szerző Neve" />
+
+        <TextView
+            android:id="@+id/textViewPostDate"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:textSize="12sp"
+            android:textColor="@android:color/darker_gray"
+            app:layout_constraintEnd_toEndOf="@id/textViewAuthorName"
+            app:layout_constraintStart_toEndOf="@id/imageViewAuthorPhoto"
+            app:layout_constraintTop_toBottomOf="@id/textViewAuthorName"
+            tools:text="2023.12.25 10:30" />
+
+        <TextView
+            android:id="@+id/textViewPostTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/black"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/imageViewAuthorPhoto"
+        tools:text="Ez a Bejegyzés Címe" />
+
+        <!-- Tartalom -->
+        <TextView
+            android:id="@+id/textViewPostContent"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textColor="@android:color/black"
+            android:autoLink="web"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textViewPostTitle"
+        tools:text="Ez itt a bejegyzés tartalma, ami lehet hosszabb is..." />
+
+
+        <ImageView
+            android:id="@+id/imageViewPostImage"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter"
+            android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textViewPostContent"
+        tools:src="@tools:sample/backgrounds/scenic"
+        tools:visibility="visible"
+        tools:layout_height="200dp"/>
+
+        <!-- Audio Lejátszó gomb (ha van) -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonPlayAudio"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
+            android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="@string/play_audio"
+        app:icon="@drawable/ic_play_arrow"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/imageViewPostImage"
+        tools:visibility="visible"/>
+
+        <ImageButton
+            android:id="@+id/buttonMenuOptions"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_more_vert"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:padding="8dp"
+        android:visibility="visible"
+            android:backgroundTint="#FF0000"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/textViewAuthorName"
+        app:layout_constraintBottom_toBottomOf="@id/textViewPostDate"
+        android:contentDescription="@string/post_options_menu" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>

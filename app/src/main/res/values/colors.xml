@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Régi színek (opcionális, törölheted, ha már nem használod őket) -->
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+
+    <!-- Közös színek -->
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <!-- =========================================== -->
+    <!-- === ÚJ BÉZS-BORDÓ PALETTA SZÍNEI === -->
+    <!-- =========================================== -->
+
+    <!-- Fő színek -->
+    <color name="brown_500">#795548</color>
+    <color name="brown_700">#5D4037</color>
+    <color name="orange_500">#FF9800</color> <!-- Kiemelő -->
+
+    <!-- Háttér/Felület színek -->
+    <color name="beige_background">#FFF8E1</color> <!-- Ablak háttér -->
+    <color name="red_300_surface">#E57373</color> <!-- Kártya/Poszt háttér -->
+
+    <!-- Szöveg/Ikon Színek -->
+    <color name="brown_900">#3E2723</color>   <!-- Elsődleges szöveg (sötét) -->
+    <color name="brown_700_secondary">#5D4037</color> <!-- Másodlagos szöveg (sötét) -->
+    <!-- A fehér már definiálva van -->
+
+    <!-- Szürke árnyalatok (ha kellenek) -->
+    <color name="grey_400">#BDBDBD</color>
+
+    <!-- =========================================== -->
+    <!-- === Elnevezett Téma Színek (Ezeket használja a téma) === -->
+    <!-- =========================================== -->
+    <color name="colorPrimary">@color/brown_500</color>
+    <color name="colorPrimaryVariant">@color/brown_700</color>
+    <color name="colorOnPrimary">@color/white</color>
+
+    <color name="colorSecondary">@color/orange_500</color>
+    <color name="colorSecondaryVariant">@color/orange_500</color> <!-- Vagy egy sötétebb narancs -->
+    <color name="colorOnSecondary">@color/black</color> <!-- Fekete az narancson -->
+    <color name="dark_brown_background">#211A16</color>
+    <color name="dark_error">#CF6679</color>
+    <color name="color_background">@color/beige_background</color> <!-- XML attribútum név! -->
+    <color name="colorSurface">@color/red_300_surface</color> <!-- Kártyákhoz -->
+    <color name="colorOnBackground">@color/brown_900</color> <!-- Szöveg a bézs háttéren -->
+    <color name="colorOnSurface">@color/white</color> <!-- Szöveg a vöröses kártyán -->
+
+    <color name="colorError">#B00020</color> <!-- Alap Material piros hiba szín -->
+    <color name="colorOnError">@color/white</color>
+
+    <color name="textColorPrimary">@color/brown_900</color> <!-- Sötét szöveg alapból -->
+    <color name="textColorSecondary">@color/brown_700_secondary</color> <!-- Világosabb sötét szöveg -->
+
+    <color name="colorControlNormalColor">@color/brown_700_secondary</color> <!-- Ikonok színe -->
+    <color name="colorControlHighlightColor">@color/grey_400</color> <!-- Ripple effect -->
+
+</resources>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!-- Mentés gomb (ha a toolbaron akarod, bár a layoutban is van) -->
+    <!--
+    <item
+        android:id="@+id/action_save_post"
+        android:icon="@drawable/ic_save"
+        android:title="@string/menu_save"
+        app:showAsAction="ifRoom" />
+    -->
+
+    <!-- *** ÚJ: Súgó menüpont *** -->
+    <item
+        android:id="@+id/action_markdown_help"
+        android:icon="@drawable/ic_help_outline"
+    android:title="@string/menu_markdown_help"
+    app:showAsAction="ifRoom" />
+    <!-- *********************** -->
+
+</menu>

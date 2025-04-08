@@ -1,0 +1,110 @@
+<resources>
+    <string name="app_name">Musician Blog</string>
+
+    <!-- Hints -->
+    <string name="hint_email">Email</string>
+    <string name="hint_password">Password</string>
+    <string name="hint_confirm_password">Confirm Password</string>
+    <string name="hint_post_title">Title</string>
+    <string name="hint_post_content">Your thoughts, lyrics, ideas...</string>
+
+    <!-- Buttons -->
+    <string name="button_login">Login</string>
+    <string name="button_register">Register</string>
+    <string name="button_save_post">Save Post</string>
+    <string name="button_pick_image">Kép</string>
+    <string name="button_pick_audio">Audio</string>
+    <string name="button_save_changes">Módosítások mentése</string>
+    <string name="button_edit_profile">Profil szerkesztése</string>
+    <string name="button_follow">Követés</string>
+    <string name="button_unfollow">Követés megszüntetése</string>
+    <string name="button_loading">Töltés...</string>
+
+    <!-- TextViews / Links -->
+    <string name="prompt_no_account">Don\'t have an account? Register</string>
+    <string name="prompt_have_account">Already have an account? Login</string>
+
+    <!-- Menu -->
+    <string name="action_logout">Logout</string>
+    <string name="action_profile">Profile</string>
+    <string name="menu_edit">Szerkesztés</string>
+    <string name="menu_delete">Törlés</string>
+
+
+    <!-- Activity Titles -->
+    <string name="title_activity_register">Register</string>
+    <string name="title_activity_main">Fórum</string>
+    <string name="title_activity_add_edit_post">Post Details</string>
+    <string name="title_add_post">Add New Post</string>
+    <string name="title_edit_post">Edit Post</string>
+    <string name="title_edit_profile">Profil szerkesztése</string>
+
+
+    <!-- Errors -->
+    <string name="error_field_required">This field is required</string>
+    <string name="error_password_too_short">Password must be at least 6 characters</string>
+    <string name="error_passwords_do_not_match">Passwords do not match</string>
+    <string name="error_auth_failed">Authentication failed</string>
+    <string name="error_registration_failed">Registration failed</string>
+    <string name="error_not_logged_in">User not logged in</string>
+    <string name="error_loading_post">Error loading post</string>
+    <string name="error_loading_post_data">Could not load post data</string>
+    <string name="error_post_not_found">Post not found</string>
+    <string name="error_loading_post_invalid_id">Error: Invalid post ID</string>
+    <string name="error_saving_post">Error saving post</string>
+    <string name="error_updating_post">Error updating post</string>
+    <string name="error_deleting_post">Error deleting post</string>
+    <string name="error_creating_user_profile_partial">Regisztráció sikeres, de a profil létrehozása nem sikerült.</string> <!-- JAVÍTVA: Érték hozzáadva -->
+    <string name="error_uploading_file">Hiba a fájl feltöltésekor</string>
+    <string name="error_invalid_email">Érvénytelen email cím</string>
+    <string name="error_registration_failed_unexpected">Regisztrációs hiba (váratlan)</string>
+    <string name="error_weak_password">A jelszó túl gyenge</string>
+    <string name="error_email_already_in_use">Ez az email cím már használatban van</string>
+    <string name="error_loading_user_data">Hiba a felhasználói adatok betöltésekor</string>
+    <string name="error_user_data_not_found">Felhasználói adatok nem találhatóak</string>
+    <string name="error_updating_profile">Hiba a profil frissítésekor</string>
+    <string name="error_post_empty">A bejegyzés nem lehet üres (szöveg/kép/hang szükséges)</string>
+
+
+    <!-- Success Messages -->
+    <string name="registration_successful">Registration successful!</string>
+    <string name="post_saved_success">Post saved successfully!</string>
+    <string name="post_updated_success">Post updated successfully!</string>
+    <string name="post_deleted_success">Post deleted successfully!</string>
+    <string name="profile_updated_success">Profil sikeresen frissítve!</string>
+
+    <!-- FAB Description -->
+    <string name="fab_add_post_description">Add new blog post</string>
+
+    <!-- Delete Dialog -->
+    <string name="dialog_delete_title">Delete Post</string>
+    <string name="dialog_delete_message">Are you sure you want to delete "%1$s"?</string>
+    <string name="dialog_delete_positive">Delete</string>
+    <string name="dialog_delete_negative">Cancel</string>
+    <string name="dialog_delete_message_generic">Biztosan törölni szeretnéd ezt a bejegyzést?</string>
+
+
+    <!-- Other UI Texts -->
+    <string name="play_audio">Audio lejátszása</string>
+    <string name="unknown_author">Ismeretlen szerző</string>
+    <string name="upload_in_progress">Feltöltés folyamatban...</string>
+    <string name="selected_audio_file">Kiválasztott audio: %1$s</string>
+    <string name="existing_audio_attached">Csatolt hangfájl</string>
+    <string name="switch_public">Publikus</string>
+    <string name="followers_count">%d Követő</string>
+    <string name="following_count">%d Követés</string>
+    <string name="profile_header_background">Profil fejléc háttér</string>
+    <string name="header_user_posts">Bejegyzések</string>
+    <string name="edit_profile_picture_button">Profilkép szerkesztése</string>
+    <string name="hint_display_name">Megjelenítendő név</string>
+    <string name="default_notification_channel_id" translatable="false">new_posts_channel</string>
+    <string name="empty_post_list">üres lista</string>
+    <string name="title_activity_profile">profil</string>
+    <string name="Felhasználónév">Felhasználónév</string>
+    <string name="default_display_name">Username</string>
+    <string name="post_options_menu">Poszt szerkesztése</string>
+    <string name="empty_post_list_profile">Még nincsenek bejegyzések</string>
+    <string name="stop_audio">Leállítás</string>
+    <string name="menu_markdown_help">Markdown segítség</string>
+    <string name="title_activity_markdown_help">Markdown súgó</string>
+</resources>

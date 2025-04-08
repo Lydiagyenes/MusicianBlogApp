@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Ez a mappa lesz használva a kamera által készített képek ideiglenes tárolására -->
+    <!-- A 'name' tetszőleges, a 'path' megadja az elérési utat -->
+    <external-cache-path name="my_images" path="images/"/>
+    <!-- Használhatsz más mappákat is, pl. external-files-path -->
+</paths>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.MusicianBlogApp" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Fő színek maradhatnak, vagy sötétítheted őket -->
+        <item name="colorPrimary">@color/brown_500</item>
+        <item name="colorPrimaryVariant">@color/brown_700</item>
+        <item name="colorOnPrimary">@color/white</item>
+
+        <!-- Kiemelő szín maradhat -->
+        <item name="colorSecondary">@color/orange_500</item>
+        <item name="colorSecondaryVariant">@color/orange_500</item>
+        <item name="colorOnSecondary">@color/black</item>
+
+        <!-- Háttér és Felület színek (SÖTÉT) -->
+        <item name="android:colorBackground">#211A16</item> <!-- Nagyon sötét barna -->
+        <item name="colorSurface">@color/brown_700</item>   <!-- Sötétbarna kártyák -->
+        <item name="colorOnBackground">@color/white</item>
+        <item name="colorOnSurface">@color/white</item>
+
+        <!-- Hiba szín -->
+        <item name="colorError">#CF6679</item> <!-- Világosabb piros sötét témához -->
+        <item name="colorOnError">@color/black</item>
+
+        <!-- Status Bar színe -->
+        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+
+        <!-- Alapértelmezett szövegszínek (SÖTÉT) -->
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:textColorSecondary">#BDBDBD</item> <!-- Világosszürke -->
+
+        <!-- Alapértelmezett ikon színezés (SÖTÉT) -->
+        <item name="colorControlNormal">#BDBDBD</item> <!-- Világosszürke -->
+        <item name="colorControlActivated">?attr/colorSecondary</item>
+        <item name="colorControlHighlight">#40FFFFFF</item> <!-- Fehér áttetsző -->
+    </style>
+</resources>

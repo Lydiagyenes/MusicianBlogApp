@@ -1,0 +1,75 @@
+*.iml
+.gradle
+/local.properties
+/.idea/caches
+/.idea/libraries
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/navEditor.xml
+/.idea/assetWizardSettings.xml
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.cxx
+local.properties
+# Built application files
+*.apk
+*.aab
+*.ap_
+
+# Files for the ART/Dalvik VM
+*.dex
+
+# Java class files
+*.class
+
+# Generated files
+bin/
+gen/
+out/
+
+# Gradle files
+.gradle/
+build/
+
+# Local configuration files (sdk path, etc)
+local.properties
+.idea/workspace.xml
+.idea/libraries/
+.idea/navEditor.xml
+.idea/assetWizardSettings.xml
+
+# Log Files
+*.log
+
+# Android Studio Navigation editor files
+.navigation/
+
+# Android Studio Profiler files
+*.hprof
+
+# Keystore files
+*.jks
+*.keystore
+
+# External native build folder generated in CMAKELists projects
+.cxx/
+
+# Google Services (force remove for safety)
+# *Appending* /google-services.json file pattern rather than replacing allows
+# project-level gitignore setting to override this. Generally, you likely
+# want to keep this file out of Git, but if you really want it, you can add
+# '!/app/google-services.json' to your project's .gitignore
+google-services.json
+
+# Secrets (API keys, etc.) - Add any files containing sensitive keys!
+# secrets.properties
+
+# IntelliJ
+*.iml
+.idea/modules.xml
+.idea/misc.xml
+.idea/gradle.xml
+.idea/vcs.xml
+.idea/render.experimental.xml
