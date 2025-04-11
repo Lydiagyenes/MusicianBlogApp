@@ -41,9 +41,9 @@ android {
 }
 
 dependencies {
-    val markwonVersion = "4.6.2" // Használhatod a legfrissebbet is
+    val markwonVersion = "4.6.2"
     implementation("io.noties.markwon:core:$markwonVersion")
-    // Opcionális kiterjesztések
+
     implementation("io.noties.markwon:ext-strikethrough:$markwonVersion")
     implementation("io.noties.markwon:ext-tasklist:$markwonVersion")
     implementation("io.noties.markwon:html:$markwonVersion")
@@ -51,7 +51,7 @@ dependencies {
     implementation("androidx.core:core-ktx:1.9.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.11.0")
-    implementation("androidx.constraintlayout:constraintlayout:2.1.4") // Itt a ConstraintLayout!
+    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     implementation("androidx.recyclerview:recyclerview:1.3.2")
     implementation("androidx.cardview:cardview:1.0.0")
     implementation ("de.hdodenhof:circleimageview:3.1.0")           // Kör alakú képnézethez
@@ -67,7 +67,7 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:32.7.4"))
     implementation("com.google.firebase:firebase-auth")
     implementation("com.google.firebase:firebase-firestore")
-    implementation ("com.google.firebase:firebase-storage")       // Firebase Storage fájlokhoz
+    implementation ("com.google.firebase:firebase-storage")
     implementation ("com.google.firebase:firebase-messaging")
 
     // Tesztek (Kotlin szintaxis!)

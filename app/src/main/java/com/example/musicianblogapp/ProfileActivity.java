@@ -47,7 +47,7 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView; // CircleImageView import
 
-public class ProfileActivity extends AppCompatActivity implements PostAdapter.OnPostInteractionListener { // Implementáljuk a listenert
+public class ProfileActivity extends AppCompatActivity implements PostAdapter.OnPostInteractionListener {
 
     private static final String TAG = "ProfileActivity";
 
@@ -58,7 +58,7 @@ public class ProfileActivity extends AppCompatActivity implements PostAdapter.On
     private RecyclerView recyclerViewUserPosts;
     private ProgressBar progressBarProfile;
     private TextView textViewEmptyList;
-    private Toolbar toolbarProfile; // Opcionális: Ha van külön toolbar
+    private Toolbar toolbarProfile;
 
     // --- Firebase ---
     private FirebaseAuth mAuth;
@@ -66,7 +66,7 @@ public class ProfileActivity extends AppCompatActivity implements PostAdapter.On
     private FirebaseStorage storage; // Törléshez kellhet
     private FirebaseUser currentUser; // A bejelentkezett user
     private ListenerRegistration postsListener; // Posztok figyeléséhez
-    private ListenerRegistration userListener;  // Profil user adatainak figyeléséhez (opcionális)
+    private ListenerRegistration userListener;  // Profil user adatainak figyeléséhez
 
     // --- Adapter és Adatok ---
     private PostAdapter postAdapter;
@@ -87,7 +87,7 @@ public class ProfileActivity extends AppCompatActivity implements PostAdapter.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_profile); // A profil layoutja kell ide!
+        setContentView(R.layout.activity_profile);
 
         // Firebase inicializálás
         mAuth = FirebaseAuth.getInstance();
@@ -104,7 +104,7 @@ public class ProfileActivity extends AppCompatActivity implements PostAdapter.On
             return;
         }
         currentUser = mAuth.getCurrentUser();
-        // Ellenőrizzük, hogy saját profil-e
+
         isOwnProfile = currentUser != null && currentUser.getUid().equals(profileUserId);
 
 
@@ -114,7 +114,6 @@ public class ProfileActivity extends AppCompatActivity implements PostAdapter.On
         // UI elemek bekötése (activity_profile.xml alapján!)
 
 
-        // TODO: Cseréld le a findViewById hívásokat a TE activity_profile.xml ID-jaira!
         profileImageView = findViewById(R.id.profileImageView); // Példa ID
         textViewDisplayName = findViewById(R.id.textViewProfileName); // Példa ID
         textViewFollowersCount = findViewById(R.id.textViewFollowersCount); // Példa ID
@@ -136,7 +135,7 @@ public class ProfileActivity extends AppCompatActivity implements PostAdapter.On
         userPostList = new ArrayList<>();
         recyclerViewUserPosts.setLayoutManager(new LinearLayoutManager(this));
 
-        // Gomb listener beállítása (a loadUserData után fogjuk ténylegesen beállítani a szöveget/műveletet)
+        // Gomb listener beállítása
         buttonFollowEdit.setOnClickListener(v -> handleFollowEditButtonClick());
 
         if (textViewEmptyList != null) {
@@ -179,7 +178,7 @@ public class ProfileActivity extends AppCompatActivity implements PostAdapter.On
                         if (user != null) {
                             Log.d(TAG, "Parsed User displayName: " + user.getDisplayName());
                             if (textViewDisplayName != null) { // Null check a TextView-ra
-                                // Használjuk a User objektumból kiolvasott nevet
+                                //  User objektumból kiolvasott nevet
                                 textViewDisplayName.setText(user.getDisplayName() != null ? user.getDisplayName() : getString(R.string.default_display_name));
                             } else {
                                 Log.e(TAG, "textViewDisplayName is null!");
@@ -225,7 +224,7 @@ public class ProfileActivity extends AppCompatActivity implements PostAdapter.On
     private void checkIfFollowing() {
         if (currentUser == null) return;
         isLoadingFollowStatus = true;
-        updateFollowEditButton(); // Mutassuk, hogy tölt
+        updateFollowEditButton();
 
         db.collection("users").document(currentUser.getUid()).get()
                 .addOnSuccessListener(documentSnapshot -> {
@@ -274,7 +273,7 @@ public class ProfileActivity extends AppCompatActivity implements PostAdapter.On
                 userPostList.addAll(snapshots.toObjects(Post.class));
                 postAdapter.notifyDataSetChanged(); // Vagy DiffUtil használata
                 Log.d(TAG, "User posts loaded/updated: " + userPostList.size());
-                // TODO: Kezelni, ha nincs poszt (pl. üzenet megjelenítése)
+
             }
         });
     }
@@ -284,14 +283,14 @@ public class ProfileActivity extends AppCompatActivity implements PostAdapter.On
         // Csak akkor hozzuk létre, ha még nincs
         if (postAdapter == null) {
             String loggedInUserId = (currentUser != null) ? currentUser.getUid() : null;
-            glide = Glide.with(this); // Győződj meg róla, hogy a glide inicializálva van (pl. onCreate-ben)
+            glide = Glide.with(this);
 
             postAdapter = new PostAdapter(
                     this,
                     userPostList, // Az Activity listája
                     glide,
                     loggedInUserId, // Bejelentkezett user ID-ja
-                    true,    // *** Profil oldalon TRUE ***
+                    true,
                     this     // Az Activity kezeli a kattintásokat
             );
             recyclerViewUserPosts.setAdapter(postAdapter); // Adapter beállítása
@@ -314,7 +313,7 @@ public class ProfileActivity extends AppCompatActivity implements PostAdapter.On
                 Toast.makeText(this, "A követéshez be kell jelentkezni.", Toast.LENGTH_SHORT).show();
                 return;
             }
-            if (!isLoadingFollowStatus) { // Csak akkor engedjük, ha nem tölt éppen
+            if (!isLoadingFollowStatus) {
                 toggleFollow();
             }
         }
@@ -327,7 +326,7 @@ public class ProfileActivity extends AppCompatActivity implements PostAdapter.On
             buttonFollowEdit.setEnabled(true); // Mindig engedélyezett
         } else {
             if (isLoadingFollowStatus) {
-                buttonFollowEdit.setText(R.string.button_loading); // Pl. "Töltés..." string
+                buttonFollowEdit.setText(R.string.button_loading);
                 buttonFollowEdit.setEnabled(false); // Letiltjuk töltés közben
             } else {
                 buttonFollowEdit.setText(isFollowing ? R.string.button_unfollow : R.string.button_follow);
@@ -342,7 +341,7 @@ public class ProfileActivity extends AppCompatActivity implements PostAdapter.On
 
         if (exoPlayer.isPlaying()) {
             exoPlayer.stop();
-            if(currentlyPlayingUrl != null && !url.equals(currentlyPlayingUrl)){ // Csak akkor állítsd vissza a régit, ha MÁST indítunk
+            if(currentlyPlayingUrl != null && !url.equals(currentlyPlayingUrl)){
                 updatePlayButtonState(currentlyPlayingUrl, false);
             }
         }
@@ -393,7 +392,7 @@ public class ProfileActivity extends AppCompatActivity implements PostAdapter.On
     private void toggleFollow() {
         if (currentUser == null || isOwnProfile) return;
 
-        isLoadingFollowStatus = true; // Mutassuk, hogy dolgozunk
+        isLoadingFollowStatus = true;
         updateFollowEditButton();
 
         DocumentReference currentUserRef = db.collection("users").document(currentUser.getUid());
@@ -413,11 +412,11 @@ public class ProfileActivity extends AppCompatActivity implements PostAdapter.On
         batch.commit()
                 .addOnSuccessListener(aVoid -> {
                     Log.d(TAG, "Follow status updated successfully.");
-                    isFollowing = !isFollowing; // Átállítjuk a lokális állapotot
+                    isFollowing = !isFollowing;
                     isLoadingFollowStatus = false;
-                    // Frissítsük a UI-t (gomb és esetleg a követők száma - bár az listenerrel is frissülhet)
+
                     updateFollowEditButton();
-                    // Opcionális: loadUserData(); // Újratölthetjük a követők számának azonnali frissítéséhez
+
                 })
                 .addOnFailureListener(e -> {
                     Log.e(TAG, "Error updating follow status", e);
@@ -438,7 +437,7 @@ public class ProfileActivity extends AppCompatActivity implements PostAdapter.On
 
     @Override
     public void onPostClick(Post post) {
-        // Ide tehetsz logikát, ha a posztra kattintva mást szeretnél
+
         Log.d(TAG, "Post clicked on profile: " + post.getId());
     }
     private void stopAudio() {
@@ -490,10 +489,8 @@ public class ProfileActivity extends AppCompatActivity implements PostAdapter.On
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         // Kezeljük a vissza (Up) gombot a toolbaron
         if (item.getItemId() == android.R.id.home) {
-            // Navigáljunk vissza a parent Activity-hez (amit a Manifestben megadtunk)
-            // VAGY egyszerűen fejezzük be ezt az Activity-t
-            finish(); // Ez általában a legegyszerűbb és leggyakoribb
-            // NavUtils.navigateUpFromSameTask(this); // Ez egy másik mód
+
+            finish();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -509,7 +506,7 @@ public class ProfileActivity extends AppCompatActivity implements PostAdapter.On
                 PostAdapter.PostViewHolder holder = (PostAdapter.PostViewHolder) recyclerViewUserPosts.findViewHolderForAdapterPosition(i);
                 if (holder != null && holder.buttonPlayAudio != null) {
                     Log.d(TAG, "Found ViewHolder for position: " + i + ", updating button.");
-                    // Itt feltételezzük, hogy holder.buttonPlayAudio egy MaterialButton
+
                     com.google.android.material.button.MaterialButton materialButton = holder.buttonPlayAudio;
                     if (isPlaying) {
                         materialButton.setText(R.string.stop_audio);
@@ -644,8 +641,7 @@ public class ProfileActivity extends AppCompatActivity implements PostAdapter.On
         // Ellenőrizzük, hogy a user még be van-e jelentkezve (elvileg igen)
         currentUser = mAuth.getCurrentUser();
         if (currentUser == null) {
-            // Ez nem fordulhat elő normál esetben, ha idejutottunk,
-            // de biztonság kedvéért visszaléphetünk.
+
             Log.w(TAG, "User became null in onStart, finishing ProfileActivity.");
             finish();
             return;
@@ -662,7 +658,7 @@ public class ProfileActivity extends AppCompatActivity implements PostAdapter.On
         progressBarProfile.setVisibility(View.VISIBLE); // Mutassuk a töltést
         if (textViewEmptyList != null) textViewEmptyList.setVisibility(View.GONE);
 
-        // Adapter beállítása, ha még nincs (ugyanaz, mint setupAdapter)
+
         setupAdapter(); // Ezt itt is lefuttatjuk, hogy biztosan legyen adapter
 
         Query query = db.collection("posts")
