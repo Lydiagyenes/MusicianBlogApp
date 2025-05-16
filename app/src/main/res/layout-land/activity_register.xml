@@ -9,23 +9,21 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingStart="24dp"
-        android:paddingEnd="24dp"
-        android:paddingTop="16dp"
-        android:paddingBottom="16dp">
+        android:padding="16dp">
 
         <TextView
             android:id="@+id/textViewRegisterTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/title_activity_register"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginBottom="16dp"/>
+            android:textSize="22sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="16dp"/>
 
+        <!-- Bal oszlop -->
         <EditText
             android:id="@+id/editTextRegisterName"
             android:layout_width="0dp"
@@ -34,9 +32,10 @@
             android:inputType="textPersonName|textCapWords"
             android:minHeight="48dp"
             android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
             app:layout_constraintTop_toBottomOf="@id/textViewRegisterTitle"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintEnd_toStartOf="@+id/editTextRegisterPassword" />
 
         <EditText
             android:id="@+id/editTextRegisterEmail"
@@ -46,10 +45,12 @@
             android:inputType="textEmailAddress"
             android:minHeight="48dp"
             android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
             app:layout_constraintTop_toBottomOf="@id/editTextRegisterName"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintEnd_toStartOf="@+id/editTextRegisterPasswordConfirm" />
 
+        <!-- Jobb oszlop -->
         <EditText
             android:id="@+id/editTextRegisterPassword"
             android:layout_width="0dp"
@@ -57,10 +58,10 @@
             android:hint="@string/hint_password"
             android:inputType="textPassword"
             android:minHeight="48dp"
-            android:layout_marginTop="8dp"
-            app:layout_constraintTop_toBottomOf="@id/editTextRegisterEmail"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            android:layout_marginStart="8dp"
+            app:layout_constraintTop_toTopOf="@id/editTextRegisterName"
+        app:layout_constraintStart_toEndOf="@id/editTextRegisterName"
+        app:layout_constraintEnd_toEndOf="parent" />
 
         <EditText
             android:id="@+id/editTextRegisterPasswordConfirm"
@@ -70,48 +71,50 @@
             android:inputType="textPassword"
             android:minHeight="48dp"
             android:layout_marginTop="8dp"
+            android:layout_marginStart="8dp"
             app:layout_constraintTop_toBottomOf="@id/editTextRegisterPassword"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintStart_toEndOf="@id/editTextRegisterEmail"
+            app:layout_constraintEnd_toEndOf="parent" />
 
+        <!-- Emlékeztető sor -->
         <TextView
             android:id="@+id/textViewReminderLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Napi emlékeztető ideje:"
             android:textColor="?android:attr/textColorSecondary"
-            android:layout_marginTop="12dp"
-        app:layout_constraintTop_toBottomOf="@id/editTextRegisterPasswordConfirm"
+            android:layout_marginTop="16dp"
+            app:layout_constraintTop_toBottomOf="@id/editTextRegisterEmail"
         app:layout_constraintStart_toStartOf="parent"/>
 
         <Button
             android:id="@+id/buttonPickReminderTime"
             style="?android:attr/borderlessButtonStyle"
             android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:minHeight="48dp"
-        android:text="Időpont (pl. 09:00)"
-        android:textColor="?attr/colorPrimary"
-        android:paddingStart="8dp"
-        android:paddingEnd="8dp"
-        android:gravity="start|center_vertical"
-        app:layout_constraintTop_toTopOf="@id/textViewReminderLabel"
-        app:layout_constraintBottom_toBottomOf="@id/textViewReminderLabel"
-        app:layout_constraintStart_toEndOf="@id/textViewReminderLabel"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginStart="8dp"/>
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:text="Időpont (pl. 09:00)"
+            android:textColor="?attr/colorPrimary"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:gravity="start|center_vertical"
+            app:layout_constraintTop_toTopOf="@id/textViewReminderLabel"
+            app:layout_constraintBottom_toBottomOf="@id/textViewReminderLabel"
+            app:layout_constraintStart_toEndOf="@id/textViewReminderLabel"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginStart="8dp"/>
 
-
+        <!-- Alsó elemek -->
         <TextView
             android:id="@+id/textViewGoToLogin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/prompt_have_account"
             android:paddingTop="16dp"
-        android:paddingBottom="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+            android:paddingBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
         <Button
             android:id="@+id/buttonRegister"

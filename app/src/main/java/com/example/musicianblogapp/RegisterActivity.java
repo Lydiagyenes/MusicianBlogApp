@@ -11,6 +11,13 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.app.AlarmManager; // Import
+import android.app.PendingIntent; // Import
+import android.app.TimePickerDialog; // Import
+import android.content.Context; // Import
+import android.os.Build; // Import
+import java.util.Calendar; // Import
+import java.util.Locale; // Import
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -27,7 +34,10 @@ import java.util.Map;
 public class RegisterActivity extends AppCompatActivity {
 
     private static final String TAG = "RegisterActivity";
-
+    private Button buttonPickReminderTime;
+    private TextView textViewReminderLabel;
+    private int reminderHour = -1; // Kezdetben nincs kiválasztva
+    private int reminderMinute = -1;
     private EditText editTextRegisterName, editTextEmail, editTextPassword, editTextPasswordConfirm;
     private Button buttonRegister;
     private TextView textViewGoToLogin;
@@ -41,7 +51,8 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         // Feltételezzük, hogy létezik egy activity_register.xml layout
         setContentView(R.layout.activity_register);
-
+        buttonPickReminderTime = findViewById(R.id.buttonPickReminderTime);
+        textViewReminderLabel = findViewById(R.id.textViewReminderLabel);
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
 
@@ -54,7 +65,8 @@ public class RegisterActivity extends AppCompatActivity {
         progressBarRegister = findViewById(R.id.progressBarRegister);
 
         buttonRegister.setOnClickListener(v -> registerUser());
-
+        updateReminderButtonText();
+        buttonPickReminderTime.setOnClickListener(v -> showTimePickerDialog());
         textViewGoToLogin.setOnClickListener(v -> {
             // Visszalépés a LoginActivity-be (feltételezve, hogy onnan indítottuk)
             finish();
@@ -63,6 +75,33 @@ public class RegisterActivity extends AppCompatActivity {
             // startActivity(intent);
             // finish();
         });
+    }
+
+    private void showTimePickerDialog() {
+        Calendar currentTime = Calendar.getInstance();
+        int hour = (reminderHour != -1) ? reminderHour : currentTime.get(Calendar.HOUR_OF_DAY);
+        int minute = (reminderMinute != -1) ? reminderMinute : currentTime.get(Calendar.MINUTE);
+
+        TimePickerDialog timePickerDialog = new TimePickerDialog(this,
+                (view, selectedHour, selectedMinute) -> {
+                    reminderHour = selectedHour;
+                    reminderMinute = selectedMinute;
+                    updateReminderButtonText();
+                    Log.d(TAG, "Reminder time set to: " + reminderHour + ":" + reminderMinute);
+                }, hour, minute, true // true for 24-hour view
+        );
+        timePickerDialog.setTitle("Emlékeztető ideje");
+        timePickerDialog.show();
+
+    }
+
+    private void updateReminderButtonText() {
+        if (reminderHour != -1 && reminderMinute != -1) {
+            buttonPickReminderTime.setText(String.format(Locale.getDefault(), "%02d:%02d", reminderHour, reminderMinute));
+        } else {
+            buttonPickReminderTime.setText("Időpont választása (alapért. 3 perc múlva)"); // Vagy string erőforrás
+        }
+
     }
 
     private void registerUser() {
@@ -180,6 +219,8 @@ public class RegisterActivity extends AppCompatActivity {
                     progressBarRegister.setVisibility(View.GONE);
                     // Itt már nem kell újra engedélyezni a gombot, mert visszalépünk
                     Toast.makeText(RegisterActivity.this, getString(R.string.registration_successful), Toast.LENGTH_SHORT).show();
+                    setupDailyReminder(this, reminderHour, reminderMinute);
+
                     goToLogin(); // Visszatérés a Login Activity-be
                 })
                 .addOnFailureListener(e -> {
@@ -194,6 +235,66 @@ public class RegisterActivity extends AppCompatActivity {
                 });
     }
 
+    public static void setupDailyReminder(Context context, int selectedHour, int selectedMinute) {
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(context, ReminderReceiver.class);
+
+        PendingIntent pendingIntent;
+        int flags = PendingIntent.FLAG_UPDATE_CURRENT;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            flags |= PendingIntent.FLAG_IMMUTABLE;
+        }
+        pendingIntent = PendingIntent.getBroadcast(context, 1001, intent, flags); // Request code legyen egyedi
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+
+        if (selectedHour != -1 && selectedMinute != -1) {
+            // Felhasználó által választott időpont
+            calendar.set(Calendar.HOUR_OF_DAY, selectedHour);
+            calendar.set(Calendar.MINUTE, selectedMinute);
+            calendar.set(Calendar.SECOND, 0);
+            calendar.set(Calendar.MILLISECOND, 0);
+
+            // Ha a mai választott időpont már elmúlt, a következő napra állítjuk
+            if (calendar.getTimeInMillis() <= System.currentTimeMillis()) {
+                calendar.add(Calendar.DAY_OF_MONTH, 1);
+            }
+            Log.d(TAG, "Setting daily reminder for user selected time: " + selectedHour + ":" + selectedMinute);
+        } else {
+            // Alapértelmezett: 3 perc múlva (csak az első alkalommal)
+            // Ezt az ismétlődő alarm nem tudja jól kezelni, ha minden nap 3 perccel később lenne.
+            // Ezért az ELSŐ értesítést állítjuk be 3 percre, és a NAPI ismétlődőt egy fix időpontra.
+            // VAGY: Ha nincs választott idő, legyen egy fix alapértelmezett napi idő, pl. reggel 9.
+
+            // Mostani egyszerűsítés: Ha nincs választva, az első 3 perc múlva,
+            // de az ismétlődés (INTERVAL_DAY) mindig a 3 perccel későbbi időponthoz képest lesz.
+            // Ez nem ideális napi ismétlődéshez.
+
+            // JOBB MEGOLDÁS ALAPÉRTELMEZÉSRE: Fix napi időpont, pl. reggel 9, ha nem választott.
+            Log.d(TAG, "No reminder time selected by user. Setting default to 9 AM for daily repeat.");
+            calendar.set(Calendar.HOUR_OF_DAY, 9); // Alapértelmezett 9:00
+            calendar.set(Calendar.MINUTE, 0);
+            calendar.set(Calendar.SECOND, 0);
+            calendar.set(Calendar.MILLISECOND, 0);
+            if (calendar.getTimeInMillis() <= System.currentTimeMillis()) {
+                calendar.add(Calendar.DAY_OF_MONTH, 1);
+            }
+        }
+
+        // Ismétlődő alarm beállítása (napi)
+        // FIGYELEM: Az setInexactRepeating energiatakarékos, de nem garantálja a pontos időzítést.
+        // Pontosabbhoz setRepeating vagy setExactAndAllowWhileIdle + újraütemezés kellene.
+        if (alarmManager != null) {
+            alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,
+                    calendar.getTimeInMillis(),
+                    AlarmManager.INTERVAL_DAY, // Napi ismétlődés
+                    pendingIntent);
+            Log.d(TAG, "Daily reminder alarm set for: " + calendar.getTime().toString());
+        } else {
+            Log.e(TAG, "AlarmManager is null, cannot set reminder.");
+        }
+    }
     // Visszanavigál a LoginActivity-be
     private void goToLogin() {
 

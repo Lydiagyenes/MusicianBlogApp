@@ -6,10 +6,10 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <!-- Opcionális: Hardver jelzése -->
     <uses-feature android:name="android.hardware.camera" android:required="false" />
-
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
     <!-- Képek olvasása (API 33+) -->
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
-    <!-- Képek olvasása (Régebbi API szintekhez - max 32) -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
   <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="28" />
 
@@ -22,7 +22,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MusicianBlogApp"
-        tools:targetApi="31">
+        tools:targetApi="31"
+        android:name=".MyApplication"
+        >
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.provider"
@@ -95,6 +97,12 @@
     <meta-data
         android:name="com.google.firebase.messaging.default_notification_channel_id"
         android:value="@string/default_notification_channel_id"/>
+
+        <receiver
+            android:name="com.example.musicianblogapp.ReminderReceiver"
+        android:enabled="true"
+        android:exported="false">
+    </receiver>
 
     </application>
 </manifest>

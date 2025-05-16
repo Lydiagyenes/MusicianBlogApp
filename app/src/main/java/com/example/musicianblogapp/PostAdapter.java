@@ -28,6 +28,8 @@ import android.text.method.LinkMovementMethod;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 
 import de.hdodenhof.circleimageview.CircleImageView; // CircleImageView import
 
@@ -39,7 +41,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
     private final OnPostInteractionListener listener;
     private final String currentUserId; // Hogy tudjuk, melyik a saját poszt
     private final boolean showOptions; // Megjelenítsük-e a szerk/törlés menüt
-
+    private int lastPosition = -1;
     // Interfész a kattintások kezelésére
     public interface OnPostInteractionListener {
         void onAuthorClick(String authorUid);
@@ -203,9 +205,25 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                 // Itt is lehet null, de kevésbé kritikus, ha eleve GONE lenne
             }
         }
-
+        setListItemAnimation(holder.itemView, position);
     }
-
+    @Override
+    public void onViewDetachedFromWindow(@NonNull PostViewHolder holder) {
+        super.onViewDetachedFromWindow(holder);
+        // Fontos lehet az animáció törlése, ha a view eltűnik a képernyőről,
+        // hogy ne okozzon problémát az újrahasznosításkor.
+        holder.itemView.clearAnimation();
+    }
+    private void setListItemAnimation(View viewToAnimate, int position) {
+        if (position > lastPosition) {
+            Animation animation = AnimationUtils.loadAnimation(context, R.anim.fade_in);
+            viewToAnimate.startAnimation(animation);
+            lastPosition = position;
+        }
+    }
+    public void resetAnimation() {
+        lastPosition = -1;
+    }
     // Popup menü megjelenítése
     private void showPopupMenu(View view, Post post) {
         PopupMenu popup = new PopupMenu(context, view);

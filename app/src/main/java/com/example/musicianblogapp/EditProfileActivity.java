@@ -325,16 +325,14 @@ public class EditProfileActivity extends AppCompatActivity {
     }
 
     // Kép feltöltése és mentés (MÓDOSÍTVA: URI-t kap)
-    private void uploadImageAndSaveData(String displayName, Uri imageUri) { // *** EZ VÁLTOZOTT ***
+    private void uploadImageAndSaveData(String displayName, Uri imageUri) {
         String fileName = "profile_pic.jpg";
         StorageReference profilePicRef = storage.getReference()
                 .child("profile_pictures/" + currentUser.getUid() + "/" + fileName);
 
         profilePicRef.putFile(imageUri) // *** EZ VÁLTOZOTT ***
                 .addOnProgressListener(snapshot -> {
-                    // Opcionális: Feltöltés állapotának kijelzése
-                    // double progress = (100.0 * snapshot.getBytesTransferred()) / snapshot.getTotalByteCount();
-                    // Log.d(TAG, "Upload is " + progress + "% done");
+
                 })
                 .continueWithTask(task -> {
                     if (!task.isSuccessful()) {
@@ -354,14 +352,21 @@ public class EditProfileActivity extends AppCompatActivity {
     }
 
     private void updateFirestoreData(String displayName, @Nullable String photoUrl) {
+        Log.d(TAG, "Attempting to update Firestore. New displayName: " + displayName + ", New photoUrl: " + photoUrl);
         Map<String, Object> updates = new HashMap<>();
         updates.put("displayName", displayName);
         updates.put("photoURL", photoUrl); // Lehet null is
-
+        Log.d(TAG, "Data to update in Firestore: " + updates.toString());
         db.collection("users").document(currentUser.getUid())
-                .set(updates, SetOptions.merge()) // Merge! Csak a megadott mezőket frissíti
-                .addOnSuccessListener(aVoid -> handleUpdateSuccess())
-                .addOnFailureListener(this::handleUpdateFailure); // Method reference használata
+                .update(updates)
+                .addOnSuccessListener(aVoid -> {
+                    Log.d(TAG, "Firestore update successful.");
+                    handleUpdateSuccess();
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Firestore update FAILED.", e); // *** NAGYON FONTOS LOG A HIBÁVAL ***
+                    handleUpdateFailure(e);
+                });
     }
 
     // Sikeres mentés kezelése

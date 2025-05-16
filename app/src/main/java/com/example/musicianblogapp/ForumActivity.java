@@ -1,6 +1,10 @@
 package com.example.musicianblogapp;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -34,19 +38,23 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.messaging.FirebaseMessaging;
-import com.bumptech.glide.Glide; // Meglévő import
-// import com.bumptech.glide.RequestManager; // Már importálva fentebb
+import com.bumptech.glide.Glide;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import androidx.appcompat.widget.SearchView;
 
-public class ForumActivity extends AppCompatActivity {
+public class ForumActivity extends AppCompatActivity implements PostAdapter.OnPostInteractionListener, SearchView.OnQueryTextListener {
 
     // TAG átnevezése az Activity nevére (jobb gyakorlat)
     private static final String TAG = "ForumActivity";
-
+    private ListenerRegistration currentPostsListener; // Az aktuálisan figyelt posztokhoz
+    private SearchView searchView;
     private RecyclerView recyclerViewPosts;
     private PostAdapter postAdapter;
     private List<Post> postList;
@@ -65,6 +73,30 @@ public class ForumActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+     /*   AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        Intent reminderIntent = new Intent(this, ReminderReceiver.class);
+
+        PendingIntent pendingIntent;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            pendingIntent = PendingIntent.getBroadcast(this, 0, reminderIntent, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
+        } else {
+            pendingIntent = PendingIntent.getBroadcast(this, 0, reminderIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        }
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        calendar.set(Calendar.HOUR_OF_DAY, 9);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+
+// Ha a mai 9 óra már elmúlt, a következő nap 9 órára állítjuk
+        if (calendar.getTimeInMillis() <= System.currentTimeMillis()) {
+            calendar.add(Calendar.DAY_OF_MONTH, 1);
+        }
+
+// Ismétlődő alarm (napi)
+        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
+                AlarmManager.INTERVAL_DAY, pendingIntent);
+        Log.d(TAG, "Daily reminder alarm set for 9 AM."); */
 
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
@@ -85,13 +117,19 @@ public class ForumActivity extends AppCompatActivity {
 
         fabAddPost.setOnClickListener(v -> {
             // Go to com.example.musicianblogapp.AddEditPostActivity for creating a new post
-            Intent intent = new Intent(ForumActivity.this, AddEditPostActivity.class);
+            Intent addPostIntent = new Intent(ForumActivity.this, AddEditPostActivity.class);
             // No POST_ID passed, indicating create mode
-            startActivity(intent);
+            startActivity(addPostIntent);
         });
         if (textViewEmptyList != null) {
             textViewEmptyList.setVisibility(View.GONE);
         }
+        if (fabAddPost != null) { // Győződj meg róla, hogy a layoutban a FAB android:visibility="invisible"
+            Animation fabAnimation = AnimationUtils.loadAnimation(this, R.anim.fab_show);
+            fabAddPost.setVisibility(View.VISIBLE); // Először láthatóvá tesszük
+            fabAddPost.startAnimation(fabAnimation); // Majd animáljuk
+        }
+
     }
 
        private void loadPublicPosts() {
@@ -145,6 +183,12 @@ public class ForumActivity extends AppCompatActivity {
                    Log.d(TAG, "Public posts loaded/updated in adapter: " + postList.size());
 
                    checkIfListIsEmpty(); // Ellenőrizzük, hogy kell-e az üres üzenet
+                   postList.clear();
+                   postList.addAll(snapshots.toObjects(Post.class));
+                   if (postAdapter != null) { // Null check az adapterre
+                       postAdapter.resetAnimation(); // Animáció resetelése
+                       postAdapter.notifyDataSetChanged();
+                   }
                }
            });
        }
@@ -221,6 +265,10 @@ public class ForumActivity extends AppCompatActivity {
             loadPublicPosts(); // Adatok betöltése/listener csatolása
             saveFcmToken();    // FCM token mentése
         }
+        if (fabAddPost != null && fabAddPost.getVisibility() == View.VISIBLE) {
+            Animation fabAnimation = AnimationUtils.loadAnimation(this, R.anim.fab_show);
+            fabAddPost.startAnimation(fabAnimation);
+        }
     }
 
           /* com.bumptech.glide.RequestManager glide = com.bumptech.glide.Glide.with(this);
@@ -233,7 +281,32 @@ public class ForumActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.forum_menu, menu); // Új menü fájl kell!
+        getMenuInflater().inflate(R.menu.forum_menu, menu);
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        searchView = (SearchView) searchItem.getActionView();
+
+        if (searchView != null) {
+            searchView.setQueryHint("Keresés címekben..."); // String erőforrásból jobb
+            searchView.setOnQueryTextListener(this); // Beállítjuk a listenert
+
+            // Opcionális: Kezeljük a keresőmező bezárását, hogy újra betöltse az összes posztot
+            searchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+                @Override
+                public boolean onMenuItemActionExpand(MenuItem item) {
+                    // Kereső megnyílt
+                    return true; // True, hogy engedje a megnyitást
+                }
+
+                @Override
+                public boolean onMenuItemActionCollapse(MenuItem item) {
+                    // Kereső bezárult (pl. vissza gombbal vagy X-szel)
+                    loadPosts(null); // Töltsük be újra az összes posztot
+                    return true; // True, hogy engedje a bezárást
+                }
+            });
+        } else {
+            Log.e(TAG, "SearchView not found in menu!");
+        }
         return true;
     }
 
@@ -425,6 +498,7 @@ public class ForumActivity extends AppCompatActivity {
         // Detach the listener
         if (firestoreListener != null) {
             firestoreListener.remove();
+            currentPostsListener = null;
         }
         releasePlayer(); // Fontos a lejátszó elengedése
     }
@@ -442,7 +516,69 @@ public class ForumActivity extends AppCompatActivity {
                 .show();
     }
 
+    private void loadPosts(@Nullable String searchText) {
+        Log.d(TAG, "loadPosts called with searchText: " + searchText);
+        progressBarMain.setVisibility(View.VISIBLE);
+        if (textViewEmptyList != null) textViewEmptyList.setVisibility(View.GONE);
 
+        setupAdapter(); // Biztosítjuk, hogy az adapter létezik
+
+        Query query;
+
+        if (searchText != null && !searchText.trim().isEmpty()) {
+            // --- KERESÉSI LEKÉRDEZÉS ---
+            Log.d(TAG, "Performing search for title: " + searchText);
+            query = db.collection("posts")
+                    .whereEqualTo("isPublic", true) // Csak publikus
+                    // A Firestore nem támogatja a "contains" vagy "like" keresést közvetlenül.
+                    // Ez egy "kezdődik vele" (prefix) keresés lesz.
+                    // A \uf8ff egy trükk, hogy a 'searchText'-tel kezdődő és utána bármi jöhető stringeket is megtalálja.
+                    .orderBy("title") // Először cím szerint kell rendezni a range query-hez
+                    .whereGreaterThanOrEqualTo("title", searchText.trim())
+                    .whereLessThanOrEqualTo("title", searchText.trim() + "\uf8ff")
+                    // Másodlagos rendezés dátum szerint (opcionális, de jó)
+                    .orderBy("createdAt", Query.Direction.DESCENDING)
+                    .limit(20); // Limitáljuk a keresési eredményeket
+        } else {
+            // --- ALAPÉRTELMEZETT LEKÉRDEZÉS (Minden publikus poszt) ---
+            Log.d(TAG, "Loading all public posts.");
+            query = db.collection("posts")
+                    .whereEqualTo("isPublic", true)
+                    .orderBy("createdAt", Query.Direction.DESCENDING);
+        }
+
+        // Régi listener eltávolítása, ha volt
+        if (currentPostsListener != null) {
+            currentPostsListener.remove();
+        }
+
+        currentPostsListener = query.addSnapshotListener((snapshots, e) -> {
+            progressBarMain.setVisibility(View.GONE);
+            if (e != null) {
+                Log.e(TAG, "Listen failed for posts.", e);
+                Toast.makeText(ForumActivity.this, "Hiba a posztok betöltésekor: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                postList.clear();
+                if (postAdapter != null) postAdapter.notifyDataSetChanged();
+                checkIfListIsEmpty();
+                return;
+            }
+
+            if (snapshots != null) {
+                Log.d(TAG, "Received " + snapshots.size() + " posts.");
+                postList.clear();
+                postList.addAll(snapshots.toObjects(Post.class));
+                if (postAdapter != null) {
+                    postAdapter.resetAnimation(); // Animáció reset
+                    postAdapter.notifyDataSetChanged();
+                }
+                checkIfListIsEmpty();
+            } else {
+                postList.clear();
+                if (postAdapter != null) postAdapter.notifyDataSetChanged();
+                checkIfListIsEmpty();
+            }
+        });
+    }
     private void deletePostFromFirestore(String postId) {
         if (postId == null) {
             Log.w(TAG, "Cannot delete post with null ID");
@@ -474,5 +610,45 @@ public class ForumActivity extends AppCompatActivity {
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         finish();
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        Log.d(TAG, "Search submitted: " + query);
+        loadPosts(query); // Indítjuk a keresést a beírt szöveggel
+        if (searchView != null) {
+            searchView.clearFocus(); // Billentyűzet elrejtése
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        return false;
+    }
+
+    @Override
+    public void onAuthorClick(String authorUid) {
+
+    }
+
+    @Override
+    public void onPostClick(Post post) {
+
+    }
+
+    @Override
+    public void onPlayStopAudioClick(String audioUrl) {
+
+    }
+
+    @Override
+    public void onEditClick(Post post) {
+
+    }
+
+    @Override
+    public void onDeleteClick(Post post) {
+
     }
 }

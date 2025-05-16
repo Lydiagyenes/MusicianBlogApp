@@ -107,4 +107,6 @@
     <string name="stop_audio">Leállítás</string>
     <string name="menu_markdown_help">Markdown segítség</string>
     <string name="title_activity_markdown_help">Markdown súgó</string>
+    <string name="title_activity_login">Login</string>
+    <string name="menu_search">Keresés</string>
 </resources>

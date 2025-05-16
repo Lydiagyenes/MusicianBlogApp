@@ -21,7 +21,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
-
+import androidx.annotation.NonNull;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -36,39 +36,45 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
      * @param remoteMessage Object representing the message received from Firebase Cloud Messaging.
      */
     @Override
-    public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
-        Log.d(TAG, "From: " + remoteMessage.getFrom());
+        public void onMessageReceived(@NonNull RemoteMessage remoteMessage) { // Itt van a remoteMessage!
+            super.onMessageReceived(remoteMessage); // Jó gyakorlat meghívni a szülőt
 
-        // Check if message contains a data payload.
-        if (remoteMessage.getData().size() > 0) {
-            Log.d(TAG, "Message data payload: " + remoteMessage.getData());
-            // Handle data payload (e.g., navigate to specific post)
-            // Itt dolgozhatod fel a Cloud Function által küldött adatokat
-            String title = remoteMessage.getData().getOrDefault("title", "Új bejegyzés");
-            String body = remoteMessage.getData().getOrDefault("body", "Egy általad követett zenész új bejegyzést tett közzé.");
-            String postId = remoteMessage.getData().get("postId"); // Pl. hogy hova navigáljon
-            sendNotification(title, body, postId);
+            Log.d(TAG, "From: " + remoteMessage.getFrom());
 
+            String title = "Új értesítés"; // Alapértelmezett, ha nincs jobb
+            String body = "Üzeneted érkezett."; // Alapértelmezett
+            String postId = null; // Alapértelmezetten null
+
+            // Adat payload ellenőrzése
+            if (remoteMessage.getData().size() > 0) {
+                Log.d(TAG, "Message data payload: " + remoteMessage.getData());
+                title = remoteMessage.getData().getOrDefault("title", title); // Title az adatokból
+                body = remoteMessage.getData().getOrDefault("body", body);   // Body az adatokból
+                postId = remoteMessage.getData().get("postId"); // postId az adatokból
+            }
+
+            // Notification payload ellenőrzése (ha a Cloud Function küld ilyet is)
+            if (remoteMessage.getNotification() != null) {
+                Log.d(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
+                // Felülírhatjuk a title/body-t, ha a notification payload jobb adatot ad
+                if (remoteMessage.getNotification().getTitle() != null) {
+                    title = remoteMessage.getNotification().getTitle();
+                }
+                if (remoteMessage.getNotification().getBody() != null) {
+                    body = remoteMessage.getNotification().getBody();
+                }
+            }
+
+            // Értesítés megjelenítése a NotificationHelperrel
+            NotificationHelper.showSimpleNotification(
+                    getApplicationContext(), // getApplicationContext() ajánlott Service-ből
+                    NotificationHelper.CHANNEL_ID_POSTS, // A megfelelő csatorna
+                    (int) System.currentTimeMillis(), // Egyedi ID minden értesítésnek
+                    title,
+                    body,
+                    postId // A kiolvasott postId átadása
+            );
         }
-
-        // Check if message contains a notification payload. (Ha a Cloud Func notification részt is küld)
-        if (remoteMessage.getNotification() != null) {
-            Log.d(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
-            String title = remoteMessage.getNotification().getTitle();
-            String body = remoteMessage.getNotification().getBody();
-            // Ha van data payload is, abból vehetjük a postId-t, különben null
-            String postId = remoteMessage.getData().get("postId");
-            sendNotification(title != null ? title : "Értesítés",
-                    body != null ? body : "Üzeneted érkezett",
-                    postId);
-        }
-    }
-
-    /**
-     * Called if the FCM registration token is updated. This may occur if the security of
-     * the previous token had been compromised. Note that this is called when the
-     * FCM registration token is initially generated so this is where you would retrieve the token.
-     */
     @Override
     public void onNewToken(@NonNull String token) {
         Log.d(TAG, "Refreshed token: " + token);
@@ -106,14 +112,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
      */
     private void sendNotification(String messageTitle, String messageBody, @Nullable String postId) {
         Intent intent;
-        // Ha van postId, akkor a ForumActivity-t nyitjuk meg extra adattal
-        // (A ForumActivity-nek kell majd kezelnie ezt az extra adatot és esetleg megnyitni a posztot)
-        // VAGY csinálhatsz egy külön PostDetailActivity-t is.
-        // Most egyszerűen a ForumActivity-t nyitjuk meg.
+
         intent = new Intent(this, ForumActivity.class);
-        // if (postId != null) {
-        //    intent.putExtra("NAVIGATE_TO_POST_ID", postId);
-        // }
+
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
                 PendingIntent.FLAG_IMMUTABLE); // Vagy FLAG_ONE_SHOT

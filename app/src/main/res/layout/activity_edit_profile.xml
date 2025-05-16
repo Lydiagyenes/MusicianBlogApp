@@ -35,7 +35,7 @@
             android:layout_width="120dp"
             android:layout_height="120dp"
             android:src="@drawable/ic_person"
-            app:civ_border_color="#CCCCCC"
+            app:civ_border_color="?attr/colorPrimary"
             app:civ_border_width="2dp"
             tools:src="@tools:sample/avatars" />
 
@@ -69,6 +69,7 @@
             android:id="@+id/editTextEditDisplayName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="?android:attr/textColorSecondary"
             android:hint="@string/hint_display_name"
             android:inputType="textPersonName|textCapWords"/>
 
@@ -80,6 +81,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/button_save_changes"
+        android:textColor="?android:attr/textColorSecondary"
         android:layout_marginTop="32dp"
         app:layout_constraintTop_toBottomOf="@id/textInputLayoutDisplayName"
         app:layout_constraintStart_toStartOf="@id/textInputLayoutDisplayName"
